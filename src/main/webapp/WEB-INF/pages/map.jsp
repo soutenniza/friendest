@@ -7,7 +7,7 @@
 	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-	<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/sandstone/bootstrap.min.css" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/flatly/bootstrap.min.css" rel="stylesheet">
 	<style>
 		#map-canvas {
 			height: 100%;
@@ -49,31 +49,39 @@
 		<div class="row">
 			<div class="col-md-6">
 				<form role="form" method="POST" action="/submitlocations">
-					<div class="form-group">
+					<div id="friendfields" class="form-group">
 						<div>
 							<label class="control-label">Friend's Address</label>
 						</div>
 						<div>
-							<input name="addressOneFriend" type="text" class="form-control" placeholder="Friend's Address" required>
+							<input name="address1Friend" type="text" class="form-control" placeholder="Friend's Address" required>
 						</div>
 						<hr>
 						<div>
-							<input name="addressTwoFriend" type="text" class="form-control" placeholder="Friend's Address" required>
+							<input name="address2Friend" type="text" class="form-control" placeholder="Friend's Address" required>
 						</div>
 					</div>
-					<div class="form-group">
+					<div>
+						<input type="button" class="btn btn-info btn-xs" id="moreFriends" onclick="addFriend()" value="Add Friend Address"/>
+					</div>
+					<hr>
+					<div id="locationfields"class="form-group">
 						<div>
 							<label class="control-label">Potential Locations</label>
 						</div>
 						<div>
-							<input name="addressOneDest" type="text" class="form-control" placeholder="Potential Address" required>
+							<input name="address1Dest" type="text" class="form-control" placeholder="Potential Address" required>
 						</div>
 						<hr>
 						<div>
-							<input name="addressTwoDest" type="text" class="form-control" placeholder="Potential Address" required>
+							<input name="address2Dest" type="text" class="form-control" placeholder="Potential Address" required>
 						</div>
 					</div>
-					<button type="submit" class="btn btn-default">Submit</button>
+					<div>
+						<input type="button" class="btn btn-info btn-xs" id="moreLocations" onclick="addLocation()" value="Add Potential Location"/>
+					</div>
+					<hr>
+					<button type="submit" class="btn btn-lg btn-success">Submit</button>
 				</form>
 			</div>
 			<div class="col-md-6">
@@ -93,6 +101,24 @@
 								mapOptions);
 					}
 					google.maps.event.addDomListener(window, 'load', initialize);
+
+					var friendCount = 2;
+					function addFriend(){
+						friendCount++;
+						var objTo = document.getElementById('friendfields');
+						var createDiv = document.createElement("div");
+						createDiv.innerHTML = '<div> <hr> <input name="address' + friendCount + 'friend type="text class="form-control" placeholder="Friend\'s Address" >';
+						objTo.appendChild(createDiv);
+					}
+
+					var locationCount = 2;
+					function addLocation(){
+						locationCount++;
+						var objTo = document.getElementById('locationfields');
+						var createDiv = document.createElement("div");
+						createDiv.innerHTML = '<div> <hr> <input name="address' + locationCount + 'Dest type="text class="form-control" placeholder="Potential Address" >';
+						objTo.appendChild(createDiv);
+					}
 				</script>
 			</div>
 		</div>
