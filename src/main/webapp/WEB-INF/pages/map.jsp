@@ -31,11 +31,14 @@
 		</div>
 	</div>
 </div>
+<div>
+	${msg}
+</div>
 <div class="section">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6">
-				<form role="form" method="POST" action="submitlocations">
+				<form role="form" method="POST" action="/submitlocations">
 					<div class="form-group">
 						<div>
 							<label class="control-label">Friend's Address</label>
