@@ -9,11 +9,94 @@
 	<meta charset="utf-8">
 	<style>
 		#map-canvas {
-			height: 400px;
-			width: 400px;
+			height: 250px;
+			width: 250px;
+		}
+		#outputDiv{
+			font-size: 11px;
 		}
 	</style>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMBs2_RTKJAhyhEqN0NLy1cID1a6Bf1G8"></script>
+	<script>
+		var map;
+		var bounds = new google.maps.LatLngBounds();
+		var markersArray = [];
+
+
+		var destinationIcon = 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=D|FF0000|000000';
+		var originIcon = 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=O|FFFF00|000000';
+		function initialize() {
+			var mapOptions = {
+				center: { lat: -34.397, lng: 150.644},
+				zoom: 8
+			};
+			var map = new google.maps.Map(document.getElementById('map-canvas'),
+					mapOptions);
+			var geocoder = new google.maps.Geocoder();
+		}
+	function test(){
+		alert('lol');
+	}
+		function calculateDistances(){
+			var service = new google.maps.DistanceMatrixService();
+			service.getDistanceMatrix(
+					{
+						origins: ['6422 Briarwood Drive, Belleville, MI 48111'],
+						destinations: ['4626 3rd St Detroit, MI 48201'],
+						travelMode: google.maps.TravelMode.DRIVING,
+						unitSystem: google.maps.UnitSystem.IMPERIAL
+					}, callback);
+		}
+
+		function callback(response, status) {
+			if (status != google.maps.DistanceMatrixStatus.OK) {
+				alert('Error was: ' + status);
+			} else {
+				var origins = response.originAddresses;
+				var destinations = response.destinationAddresses;
+				var outputDiv = document.getElementById('outputDiv');
+				outputDiv.innerHTML = '';
+				//deleteOverlays();
+lkdfjldfds
+				for (var i = 0; i < origins.length; i++) {
+					var results = response.rows[i].elements;
+					addMarker(origins[i], false);
+					for (var j = 0; j < results.length; j++) {
+						addMarker(destinations[j], true);
+						alert(outputDiv.innerHtml += 'Origin ' + origins[i] + j + ' to ' + 'destination '
+								+ destinations[j] + ' = ' + results[j].distance.text + '.');
+
+					}
+				}
+			}
+		}
+
+		function addMarker(location, isDestination) {
+			var icon;
+			if (isDestination) {
+				icon = destinationIcon;
+			} else {
+				icon = originIcon;
+			}
+			geocoder.geocode({'address': location}, function(results, status) {
+				if (status == google.maps.GeocoderStatus.OK) {
+					bounds.extend(results[0].geometry.location);
+					map.fitBounds(bounds);
+					var marker = new google.maps.Marker({
+						map: map,
+						position: results[0].geometry.location,
+						icon: icon
+					});
+					markersArray.push(marker);
+				} else {
+					alert('Geocode was not successful for the following reason: '
+							+ status);
+				}
+			});
+		}
+		google.maps.event.addDomListener(window, 'load', initialize);
+	</script>
+
 </head>
 
 
@@ -45,56 +128,43 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6">
-				<form role="form">
+				<form role="form" method="POST" action="/submitlocations">
 					<div class="form-group">
-						<label class="control-label" for="exampleInputEmail1">Friend's Address</label>
-						<input class="form-control" id="exampleInputEmail1"
-							   placeholder="Address 1" type="text">
+						<div>
+							<label class="control-label">Friend's Address</label>
+						</div>
+						<div>
+							<input name="addressOneFriend" type="text" class="form-control" placeholder="Friend's Address" required>
+						</div>
+						<hr>
+						<div>
+							<input name="addressTwoFriend" type="text" class="form-control" placeholder="Friend's Address" required>
+						</div>
 					</div>
 					<div class="form-group">
-						<input class="form-control" id="exampleInputPassword1" placeholder="Address 2"
-							   type="text">
-					</div>
-				</form>
-			</div>
-			<div id="map-canvas"></div>
-			<script type="text/javascript">
-				function initialize() {
-					var mapOptions = {
-						center: { lat: -34.397, lng: 150.644},
-						zoom: 8
-					};
-					var map = new google.maps.Map(document.getElementById('map-canvas'),
-							mapOptions);
-				}
-				google.maps.event.addDomListener(window, 'load', initialize);
-			</script>
-		</div>
-	</div>
-</div>
-<div class="section">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-6">
-				<form role="form">
-					<div class="form-group">
-						<label class="control-label" for="exampleInputEmail1">Locations
-							<br>
-						</label>
-						<input class="form-control" id="exampleInputEmail1" placeholder="Address 1"
-							   type="email">
-					</div>
-					<div class="form-group">
-						<label class="control-label" for="exampleInputPassword1"></label>
-						<input class="form-control" id="exampleInputPassword1"
-							   placeholder="Address 2" type="text">
+						<div>
+							<label class="control-label">Potential Locations</label>
+						</div>
+						<div>
+							<input name="addressOneDest" type="text" class="form-control" placeholder="Potential Address" required>
+						</div>
+						<hr>
+						<div>
+							<input name="addressTwoDest" type="text" class="form-control" placeholder="Potential Address" required>
+						</div>
 					</div>
 					<button type="submit" class="btn btn-default">Submit</button>
 				</form>
 			</div>
 		</div>
 	</div>
+	<div id = "inputs">
+	<button type="button" onclick="calculateDistances();">Calculate
+		distances</button></p>
+	</div>
+	<div id="outputDiv"></div>
+	<div id="map-canvas"></div>
+
 </div>
 </body>
-
 </html>

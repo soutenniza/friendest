@@ -11,6 +11,6 @@ public class MapTwoController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String printWelcome(ModelMap model) {
 		model.addAttribute("message", "HomePage");
-		return "hello";
+		return "map2";
 	}
 }
