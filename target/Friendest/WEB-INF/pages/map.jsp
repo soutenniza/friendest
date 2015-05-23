@@ -5,6 +5,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/sandstone/bootstrap.min.css" rel="stylesheet">
+	<style>
+		#map-canvas {
+			height: 100%;
+			width: 100%;
+		}
+	</style>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMBs2_RTKJAhyhEqN0NLy1cID1a6Bf1G8"></script>
 </head>
 
 <body>
@@ -35,7 +42,7 @@
 	${msg}
 </div>
 <div class="section">
-	<div class="container">
+	<div class="container column">
 		<div class="row">
 			<div class="col-md-6">
 				<form role="form" method="POST" action="/submitlocations">
@@ -66,11 +73,28 @@
 					<button type="submit" class="btn btn-default">Submit</button>
 				</form>
 			</div>
-			<div class="col-md-3">
-				<img class="img-responsive" src="http://maps.googleapis.com/maps/api/staticmap?center=Tombouctou,Mali&amp;zoom=12&amp;size=200x200&amp;sensor=false">
+			<div class="col-md-6">
+				<div style="height:50%; width:100%;">
+					<div id="map-canvas">
+
+					</div>
+				</div>
+				<div>${msg}</div>
+				<script type="text/javascript">
+					function initialize() {
+						var mapOptions = {
+							center: { lat: 0, lng: 0},
+							zoom: 8
+						};
+						var map = new google.maps.Map(document.getElementById('map-canvas'),
+								mapOptions);
+					}
+					google.maps.event.addDomListener(window, 'load', initialize);
+				</script>
 			</div>
 		</div>
 	</div>
+
 </div>
 </body>
 

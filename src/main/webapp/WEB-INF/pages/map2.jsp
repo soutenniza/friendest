@@ -99,7 +99,6 @@ lkdfjldfds
 
 </head>
 
-
 <body>
 <div class="navbar navbar-default navbar-inverse navbar-static-top">
 	<div class="container">
@@ -124,6 +123,7 @@ lkdfjldfds
 		</div>
 	</div>
 </div>
+
 <div class="section">
 	<div class="container">
 		<div class="row">
@@ -157,7 +157,7 @@ lkdfjldfds
 				</form>
 			</div>
 		</div>
-	</div>
+<div style="height:50%; width:50%; position: absolute;">
 	<div id = "inputs">
 	<button type="button" onclick="calculateDistances();">Calculate
 		distances</button></p>
@@ -166,5 +166,18 @@ lkdfjldfds
 	<div id="map-canvas"></div>
 
 </div>
+<div>${msg}</div>
+<script type="text/javascript">
+	function initialize() {
+		var mapOptions = {
+			center: { lat: 0, lng: 0},
+			zoom: 8
+		};
+		var map = new google.maps.Map(document.getElementById('map-canvas'),
+				mapOptions);
+	}
+	google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
 </body>
 </html>

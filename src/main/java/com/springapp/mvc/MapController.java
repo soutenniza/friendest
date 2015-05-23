@@ -18,11 +18,12 @@ public class MapController {
 	}
 
 	@RequestMapping(value = "/submitlocations", method = RequestMethod.POST)
-	public ModelAndView showmap(@RequestParam(value ="addressOneFriend") String oneFriend,
-								@RequestParam(value ="addressTwoFriend") String twoFriend,
-								@RequestParam(value ="addressOneDest") String oneDest,
-								@RequestParam(value ="addressTwoDest") String twoDest){
-		ModelAndView mav = new ModelAndView("map");
+	public ModelAndView showmap(@RequestParam(value ="address1Friend") String oneFriend,
+								@RequestParam(value ="address2Friend") String twoFriend,
+								@RequestParam(value ="address1Dest") String oneDest,
+								@RequestParam(value ="address2Dest") String twoDest){
+		ModelAndView mav = new ModelAndView("map2");
+		mav.addObject("msg", oneFriend);
 		return mav;
 	}
 }
