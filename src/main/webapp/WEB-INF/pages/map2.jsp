@@ -21,8 +21,10 @@
 		var map;
 		var bounds = new google.maps.LatLngBounds();
 		var markersArray = [];
-
-
+		var origin1 = '6422 Briarwood Drive Belleville, MI 48111';
+		//var origin2 = new google.maps.LatLng(55.930, -3.118);
+		var destination1 = '4626 3rd St Detroit, MI 48201';
+		//var destination2 = new google.maps.LatLng(50.087, 14.421);
 		var destinationIcon = 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=D|FF0000|000000';
 		var originIcon = 'https://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=O|FFFF00|000000';
 		function initialize() {
@@ -34,15 +36,13 @@
 					mapOptions);
 			var geocoder = new google.maps.Geocoder();
 		}
-	function test(){
-		alert('lol');
-	}
+
 		function calculateDistances(){
 			var service = new google.maps.DistanceMatrixService();
 			service.getDistanceMatrix(
 					{
-						origins: ['6422 Briarwood Drive, Belleville, MI 48111'],
-						destinations: ['4626 3rd St Detroit, MI 48201'],
+						origins: [origin1],
+						destinations: [destination1],
 						travelMode: google.maps.TravelMode.DRIVING,
 						unitSystem: google.maps.UnitSystem.IMPERIAL
 					}, callback);
@@ -52,22 +52,28 @@
 			if (status != google.maps.DistanceMatrixStatus.OK) {
 				alert('Error was: ' + status);
 			} else {
+
 				var origins = response.originAddresses;
 				var destinations = response.destinationAddresses;
 				var outputDiv = document.getElementById('outputDiv');
 				outputDiv.innerHTML = '';
-				//deleteOverlays();
-lkdfjldfds
+				deleteOverlays();
+				alert('tes1');
 				for (var i = 0; i < origins.length; i++) {
 					var results = response.rows[i].elements;
-					addMarker(origins[i], false);
+					alert(results.length);
+					//addMarker(origins[i], false);
 					for (var j = 0; j < results.length; j++) {
-						addMarker(destinations[j], true);
-						alert(outputDiv.innerHtml += 'Origin ' + origins[i] + j + ' to ' + 'destination '
-								+ destinations[j] + ' = ' + results[j].distance.text + '.');
+						alert('tes3');
+						//addMarker(destinations[j], true);
+						outputDiv.innerHtml += 'Origin ' + origins[i] + j + ' to ' + 'destination '
+								+ destinations[j] + ' = ' + results[j].distance.text + '.';
+
 
 					}
 				}
+				alert('1');
+				alert(outputDiv.innerHtml);
 			}
 		}
 
@@ -94,6 +100,13 @@ lkdfjldfds
 				}
 			});
 		}
+		function deleteOverlays() {
+			for (var i = 0; i < markersArray.length; i++) {
+				markersArray[i].setMap(null);
+			}
+			markersArray = [];
+		}
+
 		google.maps.event.addDomListener(window, 'load', initialize);
 	</script>
 
@@ -157,27 +170,17 @@ lkdfjldfds
 				</form>
 			</div>
 		</div>
-<div style="height:50%; width:50%; position: absolute;">
-	<div id = "inputs">
-	<button type="button" onclick="calculateDistances();">Calculate
-		distances</button></p>
 	</div>
-	<div id="outputDiv"></div>
-	<div id="map-canvas"></div>
+	<div style="height:50%; width:50%; position: absolute;">
+		<div id = "inputs">
+		<button type="button" onclick="calculateDistances();">Calculate
+			distances</button></p>
+		</div>
+		<div id="outputDiv"></div>
+		<div id="map-canvas"></div>
 
+	</div>
 </div>
-<div>${msg}</div>
-<script type="text/javascript">
-	function initialize() {
-		var mapOptions = {
-			center: { lat: 0, lng: 0},
-			zoom: 8
-		};
-		var map = new google.maps.Map(document.getElementById('map-canvas'),
-				mapOptions);
-	}
-	google.maps.event.addDomListener(window, 'load', initialize);
-</script>
-
 </body>
+
 </html>
