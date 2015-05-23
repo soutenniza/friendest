@@ -4,6 +4,9 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/sandstone/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -37,7 +40,7 @@
 			<div class="col-md-12 jumbotron">
 				<h1>Friendest</h1>
 				<p>A destination locator for friends or anyone</p>
-				<a href="/" class="btn btn-primary">Get Started</a>
+				<a href="/map" class="btn btn-primary">Get Started</a>
 			</div>
 		</div>
 	</div>
