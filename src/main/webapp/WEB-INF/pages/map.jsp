@@ -21,10 +21,10 @@
 		</div>
 		<div class="collapse navbar-collapse" id="navbar-ex-collapse">
 			<ul class="nav navbar-nav navbar-right">
-				<li class="active">
+				<li>
 					<a href="/">Home</a>
 				</li>
-				<li>
+				<li class="active">
 					<a href="/map">Maps<br></a>
 				</li>
 			</ul>
@@ -35,43 +35,36 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6">
-				<form role="form">
+				<form role="form" method="POST" action="submitlocations">
 					<div class="form-group">
-						<label class="control-label" for="exampleInputEmail1">Friend's Address</label>
-						<input class="form-control" id="exampleInputEmail1"
-							   placeholder="Address 1" type="text">
+						<div>
+							<label class="control-label">Friend's Address</label>
+						</div>
+						<div>
+							<input name="addressOneFriend" type="text" class="form-control" placeholder="Friend's Address" required>
+						</div>
+						<hr>
+						<div>
+							<input name="addressTwoFriend" type="text" class="form-control" placeholder="Friend's Address" required>
+						</div>
 					</div>
 					<div class="form-group">
-						<input class="form-control" id="exampleInputPassword1" placeholder="Address 2"
-							   type="text">
+						<div>
+							<label class="control-label">Potential Locations</label>
+						</div>
+						<div>
+							<input name="addressOneDest" type="text" class="form-control" placeholder="Potential Address" required>
+						</div>
+						<hr>
+						<div>
+							<input name="addressTwoDest" type="text" class="form-control" placeholder="Potential Address" required>
+						</div>
 					</div>
+					<button type="submit" class="btn btn-default">Submit</button>
 				</form>
 			</div>
 			<div class="col-md-3">
 				<img class="img-responsive" src="http://maps.googleapis.com/maps/api/staticmap?center=Tombouctou,Mali&amp;zoom=12&amp;size=200x200&amp;sensor=false">
-			</div>
-		</div>
-	</div>
-</div>
-<div class="section">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-6">
-				<form role="form">
-					<div class="form-group">
-						<label class="control-label" for="exampleInputEmail1">Locations
-							<br>
-						</label>
-						<input class="form-control" id="exampleInputEmail1" placeholder="Address 1"
-							   type="email">
-					</div>
-					<div class="form-group">
-						<label class="control-label" for="exampleInputPassword1"></label>
-						<input class="form-control" id="exampleInputPassword1"
-							   placeholder="Address 2" type="text">
-					</div>
-					<button type="submit" class="btn btn-default">Submit</button>
-				</form>
 			</div>
 		</div>
 	</div>
