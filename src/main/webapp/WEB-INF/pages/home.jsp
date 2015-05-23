@@ -21,15 +21,15 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#"><span>Friendest</span></a>
+			<a class="navbar-brand" href="/"><span>Friendest</span></a>
 		</div>
 		<div class="collapse navbar-collapse" id="navbar-ex-collapse">
 			<ul class="nav navbar-nav navbar-right">
 				<li class="active">
-					<a href="#">Home</a>
+					<a href="/">Home</a>
 				</li>
 				<li>
-					<a href="#">Maps<br></a>
+					<a href="/map">Maps<br></a>
 				</li>
 			</ul>
 		</div>
@@ -41,7 +41,7 @@
 			<div class="col-md-12">
 				<h1>Friendest</h1>
 				<p>A destination locator for friends or anyone</p>
-				<a class="btn btn-primary">Get Started</a>
+				<a href="/" class="btn btn-primary">Get Started</a>
 			</div>
 		</div>
 	</div>

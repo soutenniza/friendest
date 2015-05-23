@@ -11,6 +11,6 @@ public class HomeController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String printWelcome(ModelMap model) {
 
-		return "hello";
+		return "home";
 	}
 }
