@@ -22,7 +22,8 @@ public class MapController {
 								@RequestParam(value ="addressTwoFriend") String twoFriend,
 								@RequestParam(value ="addressOneDest") String oneDest,
 								@RequestParam(value ="addressTwoDest") String twoDest){
-		ModelAndView mav = new ModelAndView("map");
+		ModelAndView mav = new ModelAndView("map2");
+		mav.addObject("msg", oneFriend);
 		return mav;
 	}
 }
