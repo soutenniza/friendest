@@ -13,6 +13,9 @@
 			height: 100%;
 			width: 100%;
 		}
+		#outputDiv{
+			font-size: 11px;
+		}
 	</style>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMBs2_RTKJAhyhEqN0NLy1cID1a6Bf1G8"></script>
 </head>
@@ -82,7 +85,7 @@
 					</div>
 					<hr>
 
-					<input type="button" onclick="both()" class="btn btn-lg btn-success" value="submit"/>
+					<input type="button" onclick="calculateDistance()" class="btn btn-lg btn-success" value="submit"/>
 				</form>
 			</div>
 			<div class="col-md-6">
@@ -91,7 +94,7 @@
 
 					</div>
 				</div>
-				<div>${msg}</div>
+
 				<script type="text/javascript">
 					var map;
 					var bounds = new google.maps.LatLngBounds();
@@ -135,7 +138,6 @@
 						//Gets the addresses of friends and throws into array
 						for(v = 1; v <= friendCount; v++){
 							var id = "address" + v + "Friend";
-							alert(document.getElementById(id).value);
 							friendLocations.push(document.getElementById(id).value);
 						}
 						//Potential addresses and throws into array
@@ -143,37 +145,15 @@
 							var id = "address" + p + "Dest";
 							potentialLocations.push(document.getElementById(id).value);
 						}
-						alert('test1');
+
 						//initializes array based on the total addresses
 						var friends = new Array(friendCount + 1);
 						for(a = 1; a < friendCount; a++){
 							friends[a] = new Array(locationCount + 1);
 						}
-						var num = 0;
-						alert('test2');
-						//loops through all situations
-						/*
-						 for(b = 0; b <= friendCount; b++){
-						 for(c = 0; c <= locationCount;c++){
-						 num++;
-						 friends[b][c] = num;
-						 }
-						 }
-						 */
-						alert('test3');
 
 
-						var origin;
-						var destination;
 						var service = new google.maps.DistanceMatrixService();
-						//for(i = 1; i <= friendCount; i++){
-						//alert('inside i' + friendCount);
-
-						//for(j = 1; j <= locationCount;j++){
-						//origin = friendLocations[i];
-						//alert('inside j' + locationCount);
-						//destination = potentialLocations[j];
-						alert(friendLocations[1]);
 						service.getDistanceMatrix(
 								{
 									origins: friendLocations,
@@ -181,10 +161,6 @@
 									travelMode: google.maps.TravelMode.DRIVING,
 									unitSystem: google.maps.UnitSystem.IMPERIAL
 								}, callback);
-						//}
-						//}
-						//alert('test what is the length = ' + results.length);
-
 					}
 
 					function callback(response, status){
@@ -195,47 +171,36 @@
 							var destinations = response.destinationAddresses;
 							var outputDiv = document.getElementById('outputDiv');
 							outputDiv.innerHTML = '';
-							//deleteOverlays();
-
+							var sum = [];
+							var averageDrivingDist = []; //In MS
+							var allMSResults = []; //Stores all results in ms
+							var duration = new Array(origins.length);
+							for(var i = 0; i < origins.length; i++)
+								duration[i] = new Array(destinations.length);
 							for (var i = 0; i < origins.length; i++) {
-
 								var results = response.rows[i].elements;
 								for (var j = 0; j < results.length; j++) {
-
-									outputDiv.innerHtml += 'Origin ' + origins[i] + j + ' to ' + 'destination '
+									outputDiv.innerHtml += 'Origin ' + origins[i] + ' to ' + 'destination '
 											+ destinations[j] + ' = ' + results[j].distance.text + '.';
+									sum[i] += parseFloat(results[j].distance.value);
+									duration[i][j] = results[j].duration.value;
 								}
 							}
-
-							//friends[i][j] = results[j].distance.text;
+							var sum = [];
+							var average = [];
+							//Average Driving Distance
+							for(var i = 0; i < results.length; i++){
+								sum.push(0);
+								for(var j =0; j < origins.length;j++){
+									sum += duration[j][i];
+								}
+								average.push(sum / origins.length);
+								alert(average[i]);
+							}
 							alert(outputDiv.innerHtml);
-
-							//var resultIn = response.rows[0].elements;
-							//alert('pushing' + resultIn[0].distance.text)
-							//results.push(resultIn[0].distance.text);
 						}
 
 					}
-					function test(){
-						alert(results.length);
-						for(n = 0; n < results.length; n++) {
-							alert(n + ':' + results[n]);
-						}
-
-					}
-
-					function both(){
-						calculateDistance();
-						//setTimeout(test(), 10000000000000);
-					}
-					/*
-					 function deleteOverlays() {
-					 for (var i = 0; i < markersArray.length; i++) {
-					 markersArray[i].setMap(null);
-					 }
-					 markersArray = [];
-					 }
-					 */
 					google.maps.event.addDomListener(window, 'load', initialize);
 				</script>
 			</div>
@@ -247,8 +212,6 @@
 		<button type="button" onclick="test();">test</button>
 	</div>
 	<div id="outputDiv"></div>
-
-
 </div>
 </body>
 
