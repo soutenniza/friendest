@@ -98,8 +98,9 @@
 
 				<script type="text/javascript">
 					var map;
+					var markers = [];
 					var bounds = new google.maps.LatLngBounds();
-
+					var geocoder;
 					var friendLocations = [];
 					var potentialLocations = [];
 					var results = [];
@@ -111,8 +112,9 @@
 
 						};
 
-						var map = new google.maps.Map(document.getElementById('map-canvas'),
+						map = new google.maps.Map(document.getElementById('map-canvas'),
 								mapOptions);
+						geocoder = new google.maps.Geocoder();
 					}
 
 					google.maps.event.addDomListener(window, 'load', initialize);
@@ -247,18 +249,46 @@
 								}
 							}
 
+							markBest(destinations[0]);
+
+							function markBest(location){
+								geocoder.geocode({'address': location}, function(results, status) {
+									if (status == google.maps.GeocoderStatus.OK) {
+										for(i=0; i<markers.length;i++){
+											markers[i].setMap(null);
+										}
+										markers.length = 0;
+
+										var lat = results[0].geometry.location.lat();
+										var lng = results[0].geometry.location.lng();
+										var mark = new google.maps.LatLng(lat, lng);
+
+
+										var marker = new google.maps.Marker({
+											position: mark,
+											map: map
+										});
+										markers.push(marker);
+
+
+									} else {
+										alert('Geocode was not successful for the following reason: '
+												+ status);
+									}
+								});
+							}
 
 							var obj = document.getElementById("resulttables");
 							obj.innerHTML = '';
 							var td = document.createElement("div");
-							var tableDistance = '<div class="row"> <div class="col-md-6"><div><h3>Closest Locations by Distance</h3><div><hr></div></div><table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Distance</th></tr></thead><tbody>'
+							var tableDistance = '<div class="row"> <div class="col-md-6"><div><h3>Distance</h3><div><hr></div></div><table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Distance</th></tr></thead><tbody>'
 							for(i = 0; i < avgDist.length; i++){
 								tableDistance += '<tr><td>' + (i + 1) + '</td><td>' + destinations[i] + '</td><td>' + avgDist[i].toFixed(1) +  ' miles </td></tr>';
 							}
 							tableDistance += '<tbody></table></div>';
 
 							 var tt = document.createElement("div");
-							 var tableTime = '<div class="col-md-6"><div><h3>Closest Locations by Driving Time</h3><div><hr></div></div> <table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Time</th></tr></thead><tbody>'
+							 var tableTime = '<div class="col-md-6"><div><h3>Driving Time</h3><div><hr></div></div> <table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Time</th></tr></thead><tbody>'
 							 for(i = 0; i < avgTime.length; i++){
 							 tableTime += '<tr><td>' + (i + 1) + '</td><td>' + destCopy[i] + '</td><td>' + avgTime[i].toFixed(1) +  ' minutes </td></tr>';
 							 }
