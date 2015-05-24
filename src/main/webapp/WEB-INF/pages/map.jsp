@@ -48,7 +48,7 @@
 	${msg}
 </div>
 <div class="section">
-	<div id="resulttables" class="container"></div>
+	<div id="resulttables" class="container column"></div>
 	<div class="container column">
 		<div class="row">
 			<div class="col-md-6">
@@ -106,7 +106,7 @@
 
 					function initialize() {
 						var mapOptions = {
-							center: { lat: 42.340805, lng: -83051657},
+							center: { lat: 42.340805, lng: -83.051657},
 							zoom: 8
 
 						};
@@ -115,6 +115,7 @@
 								mapOptions);
 					}
 
+					google.maps.event.addDomListener(window, 'load', initialize);
 
 					var friendCount = 2;
 					function addFriend(){
@@ -173,8 +174,6 @@
 						} else {
 							var origins = response.originAddresses;
 							var destinations = response.destinationAddresses;
-							var outputDiv = document.getElementById('outputDiv');
-							outputDiv.innerHTML = '';
 							var distances = new Array();
 							for (i = 0; i < origins.length; i++) {
 								distances[i] = new Array();
@@ -185,8 +184,6 @@
 							for (var i = 0; i < origins.length; i++) {
 								var results = response.rows[i].elements;
 								for (var j = 0; j < results.length; j++) {
-									outputDiv.innerHtml += 'Origin ' + origins[i] + ' to ' + 'destination '
-											+ destinations[j] + ' = ' + results[j].distance.text + '.';
 									var str = results[j].distance.value;
 									var str2 = str * 0.000621371;
 									distances[i][j] = str2;
@@ -252,29 +249,27 @@
 
 
 							var obj = document.getElementById("resulttables");
+							obj.innerHTML = '';
 							var td = document.createElement("div");
-							var tableDistance = '<div><h1>Closest Locations by Distance</h1><div><hr><div> <table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Distance</th></tr></thead><tbody>'
+							var tableDistance = '<div class="row"> <div class="col-md-6"><div><h3>Closest Locations by Distance</h3><div><hr></div></div><table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Distance</th></tr></thead><tbody>'
 							for(i = 0; i < avgDist.length; i++){
 								tableDistance += '<tr><td>' + (i + 1) + '</td><td>' + destinations[i] + '</td><td>' + avgDist[i].toFixed(1) +  ' miles </td></tr>';
 							}
-							tableDistance += '<tbody></table>';
-							td.innerHTML = tableDistance;
-							obj.appendChild(td);
+							tableDistance += '<tbody></table></div>';
 
-							 var obj = document.getElementById("resulttables");
 							 var tt = document.createElement("div");
-							 var tableTime = '<div><h1>Closest Locations by Driving Time</h1><div><hr><div> <table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Time</th></tr></thead><tbody>'
+							 var tableTime = '<div class="col-md-6"><div><h3>Closest Locations by Driving Time</h3><div><hr></div></div> <table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Time</th></tr></thead><tbody>'
 							 for(i = 0; i < avgTime.length; i++){
 							 tableTime += '<tr><td>' + (i + 1) + '</td><td>' + destCopy[i] + '</td><td>' + avgTime[i].toFixed(1) +  ' minutes </td></tr>';
 							 }
-							 tableTime += '<tbody></table>';
-							 tt.innerHTML = tableTime;
+							 tableTime += '<tbody></table></div><div>';
+							 tt.innerHTML = tableDistance + tableTime;
 							 obj.appendChild(tt);
 
 						}
 					}
 
-					google.maps.event.addDomListener(window, 'load', initialize);
+
 				</script>
 			</div>
 		</div>
