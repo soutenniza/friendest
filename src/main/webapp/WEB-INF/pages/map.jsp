@@ -44,8 +44,7 @@
 		</div>
 	</div>
 </div>
-<div>
-	${msg}
+<div id="results">
 </div>
 <div class="section">
 	<div class="container column">
@@ -186,7 +185,8 @@
 						//}
 					//}
 					//alert('test what is the length = ' + results.length);
-
+					friendLocations = [];
+					potentialLocations = [];
 				}
 
 				function callback(response, status){
@@ -197,21 +197,52 @@
 						var destinations = response.destinationAddresses;
 						var outputDiv = document.getElementById('outputDiv');
 						outputDiv.innerHTML = '';
-						var sum = [];
-						var averageDrivingDist = [];
+						var distances = new Array();
+						for(i = 0; i < origins.length; i++){
+							distances[i] = new Array();
+						}
 						for (var i = 0; i < origins.length; i++) {
 							var results = response.rows[i].elements;
-
 							for (var j = 0; j < results.length; j++) {
 								outputDiv.innerHtml += 'Origin ' + origins[i] + ' to ' + 'destination '
 										+ destinations[j] + ' = ' + results[j].distance.text + '.';
-								sum[i] += parseFloat(results[j].distance.text);
-
+								var str = results[j].distance.value;
+								var str2 = str*0.000621371;
+								distances[i][j] = str2
 							}
 
 						}
 
 
+						var avg = [];
+						for(var i = 0; i < destinations.length; i++){
+							var sum = 0;
+							for(var j = 0 ; j < origins.length; j++){
+								sum += distances[j][i];
+							}
+							sum /= origins.length;
+							avg[i] = sum;
+						}
+
+
+						for(i = 0; i < avg.length; i++){
+							for(j = i; j >0; j--){
+								if(avg[j] < avg[j-1]){
+									var temp = avg[j];
+									avg[j] = avg[j-1];
+									avg[j-1] = temp;
+									var temp2 = destinations[j];
+									destinations[j] = destinations[j-1];
+									destinations[j-1] = temp2;
+								}
+							}
+						}
+
+						for(i=0; i < avg.length; i++){
+							alert(destinations[i] + "=" + avg[i]);
+						}
+
+						//var obj = document.getElementById()
 
 						alert(outputDiv.innerHtml);
 				
