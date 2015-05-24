@@ -92,11 +92,11 @@
 			<div class="col-md-6">
 				<div style="height:50%; width:100%;">
 					<div id="map-canvas">
-
 					</div>
 				</div>
 
 				<script type="text/javascript">
+					//Declare vars
 					var map;
 					var markers = [];
 					var bounds = new google.maps.LatLngBounds();
@@ -105,20 +105,21 @@
 					var potentialLocations = [];
 					var results = [];
 
+					//Initialize map definition to point at Detroit
 					function initialize() {
 						var mapOptions = {
 							center: { lat: 42.340805, lng: -83.051657},
 							zoom: 8
-
 						};
-
 						map = new google.maps.Map(document.getElementById('map-canvas'),
 								mapOptions);
 						geocoder = new google.maps.Geocoder();
 					}
 
+					//Call initialize
 					google.maps.event.addDomListener(window, 'load', initialize);
 
+					//Add more friend fields and increments the friendcount.
 					var friendCount = 2;
 					function addFriend(){
 						friendCount++;
@@ -128,6 +129,7 @@
 						objTo.appendChild(createDiv);
 					}
 
+					//Add more location fields and increments the locationcount.
 					var locationCount = 2;
 					function addLocation(){
 						locationCount++;
@@ -136,6 +138,7 @@
 						createDiv.innerHTML = '<div> <hr> <input id="address' + locationCount + 'Dest" name="address' + locationCount + 'Dest" type="text" class="form-control" placeholder="Potential Address" >';
 						objTo.appendChild(createDiv);
 					}
+
 
 					function calculateDistance(){
 
@@ -170,6 +173,7 @@
 						potentialLocations = [];
 					}
 
+					//Returns results from server query
 					function callback(response, status) {
 						if (status != google.maps.DistanceMatrixStatus.OK) {
 							alert('Error was: ' + status);
@@ -219,7 +223,7 @@
 								destCopy[i] = destinations[i];
 
 
-							//Bubble Sort Avg Time
+							//BUBBLE SORT Avg Time!
 							for(i = 0; i < avgTime.length; i++){
 								for(j = i; j >0; j--){
 									if(avgTime[j] < avgTime[j-1]){
@@ -235,7 +239,7 @@
 
 
 
-							//Bubble Sort Avg Dist
+							//BUBBLE SORT Avg Dist!
 							for(i = 0; i < avgDist.length; i++){
 								for(j = i; j >0; j--){
 									if(avgDist[j] < avgDist[j-1]){
@@ -249,8 +253,10 @@
 								}
 							}
 
+							//Marks the best location on the map
 							markBest(destinations[0]);
 
+							//Marks the best location on the map
 							function markBest(location){
 								geocoder.geocode({'address': location}, function(results, status) {
 									if (status == google.maps.GeocoderStatus.OK) {
@@ -278,6 +284,7 @@
 								});
 							}
 
+							//Tables for showing avg distance/driving times.
 							var obj = document.getElementById("resulttables");
 							obj.innerHTML = '';
 							var td = document.createElement("div");
