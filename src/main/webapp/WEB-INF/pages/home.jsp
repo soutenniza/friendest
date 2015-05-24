@@ -28,7 +28,7 @@
 					<a href="/">Home</a>
 				</li>
 				<li>
-					<a href="/map">Maps<br></a>
+					<a href="/map">Map<br></a>
 				</li>
 			</ul>
 		</div>
@@ -39,7 +39,7 @@
 		<div class="row">
 			<div class="col-md-12 jumbotron">
 				<h1>Friendest</h1>
-				<p>A destination locator for friends or anyone</p>
+				<p>Need help finding the optimal location to meet at with all your friends?</p>
 				<a href="/map" class="btn btn-primary">Get Started</a>
 			</div>
 		</div>

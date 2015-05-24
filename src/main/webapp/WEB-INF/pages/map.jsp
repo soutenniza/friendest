@@ -38,15 +38,16 @@
 					<a href="/">Home</a>
 				</li>
 				<li class="active">
-					<a href="/map">Maps<br></a>
+					<a href="/map">Map<br></a>
 				</li>
 			</ul>
 		</div>
 	</div>
 </div>
-<div id="results">
-</div>
+
 <div class="section">
+	<div id="resulttables" class="container column">
+	</div>
 	<div class="container column">
 		<div class="row">
 			<div class="col-md-6">
@@ -104,7 +105,7 @@
 
 					function initialize() {
 						var mapOptions = {
-							center: { lat: 0, lng: 0},
+							center: { lat: 42.340805, lng: -83.051657},
 							zoom: 8
 						};
 
@@ -238,13 +239,24 @@
 							}
 						}
 
-						for(i=0; i < avg.length; i++){
-							alert(destinations[i] + "=" + avg[i]);
+
+						var obj = document.getElementById("resulttables");
+						var td = document.createElement("div");
+						var tableDistance = '<div><h1>Closest Locations by Distance</h1><div><hr><div> <table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Distance</th></tr></thead><tbody>'
+						for(i = 0; i < avg.length; i++){
+							tableDistance += '<tr><td>' + (i + 1) + '</td><td>' + destinations[i] + '</td><td>' + avg[i].toFixed(1) +  ' miles </td></tr>';
 						}
+						tableDistance += '<tbody></table>';
+						td.innerHTML = tableDistance;
+						obj.appendChild(td);
 
-						//var obj = document.getElementById()
-
-						alert(outputDiv.innerHtml);
+						var geocode = new google.maps.Geocode();
+						geocode.geocode({'address' : destinations[0]}, function(results, status){
+							if(status == google.maps.GeocoderStatus.OK){
+								map.setCenter(new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.ln()));
+								google.maps.event.addDomListener(window, 'load', initialize);
+							}
+						});
 				
 
 						//var resultIn = response.rows[0].elements;
@@ -277,11 +289,6 @@
 				</script>
 			</div>
 		</div>
-	</div>
-	<div id = "inputs">
-		<button type="button" onclick="calculateDistance();">Calculate
-			distances</button>
-		<button type="button" onclick="test();">test</button>
 	</div>
 	<div id="outputDiv"></div>
 
