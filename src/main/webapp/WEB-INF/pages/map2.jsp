@@ -163,8 +163,8 @@
 								}, callback);
 					}
 
-					function callback(response, status){
-						if(status != google.maps.DistanceMatrixStatus.OK){
+					function callback(response, status) {
+						if (status != google.maps.DistanceMatrixStatus.OK) {
 							alert('Error was: ' + status);
 						} else {
 							var origins = response.originAddresses;
@@ -172,34 +172,91 @@
 							var outputDiv = document.getElementById('outputDiv');
 							outputDiv.innerHTML = '';
 							var sum = [];
-							var averageDrivingDist = []; //In MS
-							var allMSResults = []; //Stores all results in ms
+							var distances = new Array();
+							for (i = 0; i < origins.length; i++) {
+								distances[i] = new Array();
+							}
 							var duration = new Array(origins.length);
-							for(var i = 0; i < origins.length; i++)
+							for (var i = 0; i < origins.length; i++)
 								duration[i] = new Array(destinations.length);
 							for (var i = 0; i < origins.length; i++) {
 								var results = response.rows[i].elements;
 								for (var j = 0; j < results.length; j++) {
 									outputDiv.innerHtml += 'Origin ' + origins[i] + ' to ' + 'destination '
 											+ destinations[j] + ' = ' + results[j].distance.text + '.';
-									sum[i] += parseFloat(results[j].distance.value);
-									duration[i][j] = results[j].duration.value;
+									//sum[i] += parseFloat(results[j].distance.value);
+									//duration[i][j] = results[j].duration.value;
+									var str = results[j].distance.value;
+									var str2 = str * 0.000621371;
+									distances[i][j] = str2;
+									duration[i][j] = results[j].duration.value / 60;
 								}
 							}
-							var sum = [];
-							var average = [];
+
+							var avgDist = [];
+							for (var i = 0; i < destinations.length; i++) {
+								var sum = 0;
+								for (var j = 0; j < origins.length; j++) {
+									sum += distances[j][i];
+								}
+								sum /= origins.length;
+								avgDist[i] = sum;
+							}
+
+							var avgTime = [];
 							//Average Driving Distance
-							for(var i = 0; i < results.length; i++){
-								sum.push(0);
-								for(var j =0; j < origins.length;j++){
+							for (var i = 0; i < results.length; i++) {
+								var sum = 0;
+								for (var j = 0; j < origins.length; j++) {
 									sum += duration[j][i];
 								}
-								average.push(sum / origins.length);
-								alert(average[i]);
+								sum /= origins.length;
+								avgTime[i] = sum;
 							}
-							alert(outputDiv.innerHtml);
-						}
+							//alert(outputDiv.innerHtml);
+							var destCopy = [];
+							for(i = 0; i < destinations.length; i++)
+								destCopy[i] = destinations[i];
 
+
+							//Bubble Sort Avg Time
+							for(i = 0; i < avgTime.length; i++){
+								for(j = i; j >0; j--){
+									if(avgTime[j] < avgTime[j-1]){
+										var temp = avgTime[j];
+										avgTime[j] = avgTime[j-1];
+										avgTime[j-1] = temp;
+										var temp2 = destCopy[j];
+										destCopy[j] = destCopy[j-1];
+										destCopy[j-1] = temp2;
+									}
+								}
+							}
+
+							for(i=0; i < avgTime.length;i++)
+								alert(destCopy[i] + "=" + avgTime[i] + "minutes.");
+
+							//Bubble Sort Avg Dist
+							for(i = 0; i < avgDist.length; i++){
+								for(j = i; j >0; j--){
+									if(avgDist[j] < avgDist[j-1]){
+										var temp = avgDist[j];
+										avgDist[j] = avgDist[j-1];
+										avgDist[j-1] = temp;
+										var temp2 = destinations[j];
+										destinations[j] = destinations[j-1];
+										destinations[j-1] = temp2;
+									}
+								}
+							}
+
+
+
+							for(i=0; i < avgDist.length; i++){
+								alert(destinations[i] + "=" + avgDist[i]);
+							}
+
+						}
 					}
 					google.maps.event.addDomListener(window, 'load', initialize);
 				</script>
