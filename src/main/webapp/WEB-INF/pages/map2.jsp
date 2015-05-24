@@ -171,7 +171,6 @@
 							var destinations = response.destinationAddresses;
 							var outputDiv = document.getElementById('outputDiv');
 							outputDiv.innerHTML = '';
-							var sum = [];
 							var distances = new Array();
 							for (i = 0; i < origins.length; i++) {
 								distances[i] = new Array();
@@ -184,8 +183,6 @@
 								for (var j = 0; j < results.length; j++) {
 									outputDiv.innerHtml += 'Origin ' + origins[i] + ' to ' + 'destination '
 											+ destinations[j] + ' = ' + results[j].distance.text + '.';
-									//sum[i] += parseFloat(results[j].distance.value);
-									//duration[i][j] = results[j].duration.value;
 									var str = results[j].distance.value;
 									var str2 = str * 0.000621371;
 									distances[i][j] = str2;
@@ -249,15 +246,33 @@
 									}
 								}
 							}
-
-
-
+							
 							for(i=0; i < avgDist.length; i++){
 								alert(destinations[i] + "=" + avgDist[i]);
 							}
 
 						}
 					}
+					var obj = document.getElementById("resulttables");
+					var td = document.createElement("div");
+					var tableDistance = '<div><h1>Closest Locations by Distance</h1><div><hr><div> <table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Distance</th></tr></thead><tbody>'
+					for(i = 0; i < avg.length; i++){
+						tableDistance += '<tr><td>' + (i + 1) + '</td><td>' + destinations[i] + '</td><td>' + avg[i].toFixed(1) +  ' miles </td></tr>';
+					}
+					tableDistance += '<tbody></table>';
+					td.innerHTML = tableDistance;
+					obj.appendChild(td);
+/*
+					var obj = document.getElementById("resulttables");
+					var td = document.createElement("div");
+					var tableDistance = '<div><h1>Closest Locations by Distance</h1><div><hr><div> <table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Distance</th></tr></thead><tbody>'
+					for(i = 0; i < avg.length; i++){
+						tableDistance += '<tr><td>' + (i + 1) + '</td><td>' + destinations[i] + '</td><td>' + avg[i].toFixed(1) +  ' miles </td></tr>';
+					}
+					tableDistance += '<tbody></table>';
+					td.innerHTML = tableDistance;
+					obj.appendChild(td);
+*/					
 					google.maps.event.addDomListener(window, 'load', initialize);
 				</script>
 			</div>

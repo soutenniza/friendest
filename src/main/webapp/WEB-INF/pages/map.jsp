@@ -14,7 +14,7 @@
 			width: 100%;
 		}
 		#outputDiv{
-		font-size: 11px;
+			font-size: 11px;
 		}
 	</style>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMBs2_RTKJAhyhEqN0NLy1cID1a6Bf1G8"></script>
@@ -38,16 +38,17 @@
 					<a href="/">Home</a>
 				</li>
 				<li class="active">
-					<a href="/map">Map<br></a>
+					<a href="/map">Maps<br></a>
 				</li>
 			</ul>
 		</div>
 	</div>
 </div>
-
+<div>
+	${msg}
+</div>
 <div class="section">
-	<div id="resulttables" class="container column">
-	</div>
+	<div id="resulttables" class="container"></div>
 	<div class="container column">
 		<div class="row">
 			<div class="col-md-6">
@@ -85,7 +86,7 @@
 					</div>
 					<hr>
 
-					<input type="button" onclick="both()" class="btn btn-lg btn-success" value="submit"/>
+					<input type="button" onclick="calculateDistance()" class="btn btn-lg btn-success" value="submit"/>
 				</form>
 			</div>
 			<div class="col-md-6">
@@ -94,7 +95,7 @@
 
 					</div>
 				</div>
-				<div>${msg}</div>
+
 				<script type="text/javascript">
 					var map;
 					var bounds = new google.maps.LatLngBounds();
@@ -105,8 +106,9 @@
 
 					function initialize() {
 						var mapOptions = {
-							center: { lat: 42.340805, lng: -83.051657},
+							center: { lat: 42.340805, lng: -83051657},
 							zoom: 8
+
 						};
 
 						var map = new google.maps.Map(document.getElementById('map-canvas'),
@@ -121,7 +123,6 @@
 						var createDiv = document.createElement("div");
 						createDiv.innerHTML = '<div> <hr> <input id="address' + friendCount + 'Friend" name="address' + friendCount + 'Friend" type="text" class="form-control" placeholder="Friend\'s Address" >';
 						objTo.appendChild(createDiv);
-						//alert(friendCount);
 					}
 
 					var locationCount = 2;
@@ -133,164 +134,151 @@
 						objTo.appendChild(createDiv);
 					}
 
-				function calculateDistance(){
+					function calculateDistance(){
 
-					//Gets the addresses of friends and throws into array
-					for(v = 1; v <= friendCount; v++){
-						var id = "address" + v + "Friend";
-						friendLocations.push(document.getElementById(id).value);
-					}
-					//Potential addresses and throws into array
-					for(p = 1; p <= locationCount; p++){
-						var id = "address" + p + "Dest";
-						potentialLocations.push(document.getElementById(id).value);
-					}
-
-					//initializes array based on the total addresses
-					var friends = new Array(friendCount + 1);
-					for(a = 1; a < friendCount; a++){
-						friends[a] = new Array(locationCount + 1);
-					}
-					var num = 0;
-
-					//loops through all situations
-					/*
-					for(b = 0; b <= friendCount; b++){
-						for(c = 0; c <= locationCount;c++){
-							num++;
-							friends[b][c] = num;
+						//Gets the addresses of friends and throws into array
+						for(v = 1; v <= friendCount; v++){
+							var id = "address" + v + "Friend";
+							friendLocations.push(document.getElementById(id).value);
 						}
-					}
-*/
-
-
-
-					var origin;
-					var destination;
-					var service = new google.maps.DistanceMatrixService();
-					//for(i = 1; i <= friendCount; i++){
-						//alert('inside i' + friendCount);
-
-						//for(j = 1; j <= locationCount;j++){
-							//origin = friendLocations[i];
-							//alert('inside j' + locationCount);
-							//destination = potentialLocations[j];
-
-							service.getDistanceMatrix(
-									{
-										origins: friendLocations,
-										destinations: potentialLocations,
-										travelMode: google.maps.TravelMode.DRIVING,
-										unitSystem: google.maps.UnitSystem.IMPERIAL
-									}, callback);
-						//}
-					//}
-					//alert('test what is the length = ' + results.length);
-					friendLocations = [];
-					potentialLocations = [];
-				}
-
-				function callback(response, status){
-					if(status != google.maps.DistanceMatrixStatus.OK){
-						alert('Error was: ' + status);
-					} else {
-						var origins = response.originAddresses;
-						var destinations = response.destinationAddresses;
-						var outputDiv = document.getElementById('outputDiv');
-						outputDiv.innerHTML = '';
-						var distances = new Array();
-						for(i = 0; i < origins.length; i++){
-							distances[i] = new Array();
+						//Potential addresses and throws into array
+						for(p = 1; p <= locationCount; p++){
+							var id = "address" + p + "Dest";
+							potentialLocations.push(document.getElementById(id).value);
 						}
-						for (var i = 0; i < origins.length; i++) {
-							var results = response.rows[i].elements;
-							for (var j = 0; j < results.length; j++) {
-								outputDiv.innerHtml += 'Origin ' + origins[i] + ' to ' + 'destination '
-										+ destinations[j] + ' = ' + results[j].distance.text + '.';
-								var str = results[j].distance.value;
-								var str2 = str*0.000621371;
-								distances[i][j] = str2
+
+						//initializes array based on the total addresses
+						var friends = new Array(friendCount + 1);
+						for(a = 1; a < friendCount; a++){
+							friends[a] = new Array(locationCount + 1);
+						}
+
+
+						var service = new google.maps.DistanceMatrixService();
+						service.getDistanceMatrix(
+								{
+									origins: friendLocations,
+									destinations: potentialLocations,
+									travelMode: google.maps.TravelMode.DRIVING,
+									unitSystem: google.maps.UnitSystem.IMPERIAL
+								}, callback);
+
+						friendLocations = [];
+						potentialLocations = [];
+					}
+
+					function callback(response, status) {
+						if (status != google.maps.DistanceMatrixStatus.OK) {
+							alert('Error was: ' + status);
+						} else {
+							var origins = response.originAddresses;
+							var destinations = response.destinationAddresses;
+							var outputDiv = document.getElementById('outputDiv');
+							outputDiv.innerHTML = '';
+							var distances = new Array();
+							for (i = 0; i < origins.length; i++) {
+								distances[i] = new Array();
 							}
-
-						}
-
-
-						var avg = [];
-						for(var i = 0; i < destinations.length; i++){
-							var sum = 0;
-							for(var j = 0 ; j < origins.length; j++){
-								sum += distances[j][i];
-							}
-							sum /= origins.length;
-							avg[i] = sum;
-						}
-
-
-						for(i = 0; i < avg.length; i++){
-							for(j = i; j >0; j--){
-								if(avg[j] < avg[j-1]){
-									var temp = avg[j];
-									avg[j] = avg[j-1];
-									avg[j-1] = temp;
-									var temp2 = destinations[j];
-									destinations[j] = destinations[j-1];
-									destinations[j-1] = temp2;
+							var duration = new Array(origins.length);
+							for (var i = 0; i < origins.length; i++)
+								duration[i] = new Array(destinations.length);
+							for (var i = 0; i < origins.length; i++) {
+								var results = response.rows[i].elements;
+								for (var j = 0; j < results.length; j++) {
+									outputDiv.innerHtml += 'Origin ' + origins[i] + ' to ' + 'destination '
+											+ destinations[j] + ' = ' + results[j].distance.text + '.';
+									var str = results[j].distance.value;
+									var str2 = str * 0.000621371;
+									distances[i][j] = str2;
+									duration[i][j] = results[j].duration.value / 60;
 								}
 							}
-						}
 
-
-						var obj = document.getElementById("resulttables");
-						var td = document.createElement("div");
-						var tableDistance = '<div><h1>Closest Locations by Distance</h1><div><hr><div> <table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Distance</th></tr></thead><tbody>'
-						for(i = 0; i < avg.length; i++){
-							tableDistance += '<tr><td>' + (i + 1) + '</td><td>' + destinations[i] + '</td><td>' + avg[i].toFixed(1) +  ' miles </td></tr>';
-						}
-						tableDistance += '<tbody></table>';
-						td.innerHTML = tableDistance;
-						obj.appendChild(td);
-
-						var geocode = new google.maps.Geocode();
-						geocode.geocode({'address' : destinations[0]}, function(results, status){
-							if(status == google.maps.GeocoderStatus.OK){
-								map.setCenter(new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.ln()));
-								google.maps.event.addDomListener(window, 'load', initialize);
+							var avgDist = [];
+							for (var i = 0; i < destinations.length; i++) {
+								var sum = 0;
+								for (var j = 0; j < origins.length; j++) {
+									sum += distances[j][i];
+								}
+								sum /= origins.length;
+								avgDist[i] = sum;
 							}
-						});
-				
 
-						//var resultIn = response.rows[0].elements;
-						//alert('pushing' + resultIn[0].distance.text)
-						//results.push(resultIn[0].distance.text);
-					}
+							var avgTime = [];
+							//Average Driving Distance
+							for (var i = 0; i < results.length; i++) {
+								var sum = 0;
+								for (var j = 0; j < origins.length; j++) {
+									sum += duration[j][i];
+								}
+								sum /= origins.length;
+								avgTime[i] = sum;
+							}
 
-				}
-				function test(){
-					alert(results.length);
-					for(n = 0; n < results.length; n++) {
-						alert(n + ':' + results[n]);
-					}
+							var destCopy = [];
+							for(i = 0; i < destinations.length; i++)
+								destCopy[i] = destinations[i];
 
-				}
 
-					function both(){
-						calculateDistance();
-						//setTimeout(test(), 10000000000000);
-					}
-/*
-					function deleteOverlays() {
-						for (var i = 0; i < markersArray.length; i++) {
-							markersArray[i].setMap(null);
+							//Bubble Sort Avg Time
+							for(i = 0; i < avgTime.length; i++){
+								for(j = i; j >0; j--){
+									if(avgTime[j] < avgTime[j-1]){
+										var temp = avgTime[j];
+										avgTime[j] = avgTime[j-1];
+										avgTime[j-1] = temp;
+										var temp2 = destCopy[j];
+										destCopy[j] = destCopy[j-1];
+										destCopy[j-1] = temp2;
+									}
+								}
+							}
+
+
+
+							//Bubble Sort Avg Dist
+							for(i = 0; i < avgDist.length; i++){
+								for(j = i; j >0; j--){
+									if(avgDist[j] < avgDist[j-1]){
+										var temp = avgDist[j];
+										avgDist[j] = avgDist[j-1];
+										avgDist[j-1] = temp;
+										var temp2 = destinations[j];
+										destinations[j] = destinations[j-1];
+										destinations[j-1] = temp2;
+									}
+								}
+							}
+
+
+							var obj = document.getElementById("resulttables");
+							var td = document.createElement("div");
+							var tableDistance = '<div><h1>Closest Locations by Distance</h1><div><hr><div> <table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Distance</th></tr></thead><tbody>'
+							for(i = 0; i < avgDist.length; i++){
+								tableDistance += '<tr><td>' + (i + 1) + '</td><td>' + destinations[i] + '</td><td>' + avgDist[i].toFixed(1) +  ' miles </td></tr>';
+							}
+							tableDistance += '<tbody></table>';
+							td.innerHTML = tableDistance;
+							obj.appendChild(td);
+
+							 var obj = document.getElementById("resulttables");
+							 var tt = document.createElement("div");
+							 var tableTime = '<div><h1>Closest Locations by Driving Time</h1><div><hr><div> <table class="table table-striped table-hover" > <thead><tr> <th> # </th> <th>Address</th><th>Average Time</th></tr></thead><tbody>'
+							 for(i = 0; i < avgTime.length; i++){
+							 tableTime += '<tr><td>' + (i + 1) + '</td><td>' + destCopy[i] + '</td><td>' + avgTime[i].toFixed(1) +  ' minutes </td></tr>';
+							 }
+							 tableTime += '<tbody></table>';
+							 tt.innerHTML = tableTime;
+							 obj.appendChild(tt);
+
 						}
-						markersArray = [];
 					}
-*/
+
 					google.maps.event.addDomListener(window, 'load', initialize);
 				</script>
 			</div>
 		</div>
 	</div>
-	<div id="outputDiv"></div>
 
 
 </div>
